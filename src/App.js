@@ -7,9 +7,23 @@ import {
   clearDisplay,
   handleScientific
 } from './utils/calculatorUtils';
+import Folder from './components/Folder';
+import NoteList from './components/NoteList';
+import './styles/tailwind.css';
+import WriteNotes from './components/WriteNotes';
 
 function App() {
   const [display, setDisplay] = useState('0');
+  const [personalNotes, setPersonalNotes] = useState([]);
+  const [workNotes, setWorkNotes] = useState([]);
+
+  const addNote = (note) => {
+    if (note.category === 'Personal') {
+      setPersonalNotes([...personalNotes, note]);
+    } else if (note.category === 'Work') {
+      setWorkNotes([...workNotes, note]);
+    }
+  };
 
   const handleClick = (value) => {
     if (value === 'C') return setDisplay(clearDisplay());
@@ -24,26 +38,16 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <div className="calculator">
-          <div className="display">{display}</div>
-          <div className="buttons">
-            {['7', '8', '9', '/', 'sin', 'cos'].map((btn) => (
-              <button key={btn} onClick={() => handleClick(btn)}>{btn}</button>
-            ))}
-            {['4', '5', '6', '*', 'tan', 'sqrt'].map((btn) => (
-              <button key={btn} onClick={() => handleClick(btn)}>{btn}</button>
-            ))}
-            {['1', '2', '3', '-', '^', '%'].map((btn) => (
-              <button key={btn} onClick={() => handleClick(btn)}>{btn}</button>
-            ))}
-            {['0', '.', '=', '+', 'C'].map((btn) => (
-              <button key={btn} onClick={() => handleClick(btn)}>{btn}</button>
-            ))}
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-gray-200 p-8">
+     <WriteNotes addNote={addNote} />
+
+<Folder name="Personal Notes">
+  <NoteList notes={personalNotes} />
+</Folder>
+
+<Folder name="Work Notes">
+  <NoteList notes={workNotes} />
+</Folder>
     </div>
   );
 }
